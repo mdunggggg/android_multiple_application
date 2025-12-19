@@ -20,5 +20,9 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Multi-Application"
-include(":app")
- 
+include(
+    ":app",
+    ":core:core-network")
+
+project(":core:core-network").projectDir = File(rootProject.projectDir, "./core/core-network")
+

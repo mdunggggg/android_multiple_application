@@ -1,0 +1,30 @@
+package com.mdungggg.core_network
+
+import okhttp3.Authenticator
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
+
+class ClientBuilder internal constructor(){
+    var interceptors: List<Interceptor> = listOf()
+
+    var readTimeoutInMillis: Long = 10_000
+
+    var writeTimeoutInMillis: Long = 10_000
+
+    var authenticator: Authenticator? = null
+
+    private val loggingBuilder = LoggingBuilder()
+
+    fun logging(builder : LoggingBuilder.() -> Unit) {
+        loggingBuilder.apply(builder)
+    }
+
+    fun build() : OkHttpClient = OkHttpClient.Builder()
+        .addNetworkInterceptor(loggingBuilder.build())
+        .readTimeout(readTimeoutInMillis, TimeUnit.MILLISECONDS)
+        .writeTimeout(writeTimeoutInMillis, TimeUnit.MILLISECONDS)
+        .apply { interceptors.forEach { addInterceptor(it) } }
+        .apply { authenticator?.let { authenticator(it) } }
+        .build()
+}
