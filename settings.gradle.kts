@@ -21,8 +21,19 @@ dependencyResolutionManagement {
 
 rootProject.name = "Multi-Application"
 include(
-    ":app",
+    ":apps",
+
+    // Applications
+    ":apps:learning_app",
+    ":apps:todo_app",
+
+    // Core
     ":core:core-network")
 
+// App project directories
+project(":apps:learning_app").projectDir = File(rootProject.projectDir, "./apps/learning_app")
+project(":apps:todo_app").projectDir = File(rootProject.projectDir, "./apps/todo_app")
+
+// Core project directories
 project(":core:core-network").projectDir = File(rootProject.projectDir, "./core/core-network")
 
