@@ -28,7 +28,8 @@ include(
     ":apps:todo_app",
 
     // Core
-    ":core:core-network")
+    ":core:core-network",
+    ":core:core-service")
 
 // App project directories
 project(":apps:learning_app").projectDir = File(rootProject.projectDir, "./apps/learning_app")
@@ -36,4 +37,4 @@ project(":apps:todo_app").projectDir = File(rootProject.projectDir, "./apps/todo
 
 // Core project directories
 project(":core:core-network").projectDir = File(rootProject.projectDir, "./core/core-network")
-
+project(":core:core-service").projectDir = File(rootProject.projectDir, "./core/core-service")

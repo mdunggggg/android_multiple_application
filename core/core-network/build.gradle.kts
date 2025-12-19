@@ -24,9 +24,6 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
 
-    // Hilt
-    implementation(libs.hilt.android)
-
     // Gson
     implementation(libs.gson)
 }
