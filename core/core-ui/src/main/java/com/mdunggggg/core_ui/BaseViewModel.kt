@@ -3,15 +3,8 @@ package com.mdunggggg.core_ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mdunggggg.core_util.NetworkObserver
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<DATA>(initData: DATA) : ViewModel(), NetworkObserver {
@@ -22,34 +15,43 @@ abstract class BaseViewModel<DATA>(initData: DATA) : ViewModel(), NetworkObserve
     protected val currentData: DATA
         get() = _uiState.value.data
 
-    private val connectivityChannel = Channel<Boolean>(Channel.UNLIMITED)
-    val connectivity = connectivityChannel.receiveAsFlow()
+    private val _connectivity = MutableStateFlow(true)
+    val connectivity = _connectivity.asStateFlow()
 
     override fun onConnectivityChange(isOnline: Boolean) {
-        connectivityChannel.trySend(isOnline)
+        _connectivity.value = isOnline
     }
 
-    protected open val viewModelCoroutineExceptionHandler =
-        CoroutineExceptionHandler { _, throwable ->
-            viewModelScope.launch {
+    protected fun safelyLaunch(
+        showLoading: Boolean = true,
+        block: suspend CoroutineScope.() -> DATA
+    ) {
+        viewModelScope.launch {
+            try {
+                if (showLoading) {
+                    _uiState.update { it.copy(isLoading = true, error = null) }
+                }
+                val newData = block()
                 _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        error = throwable
-                    )
+                    it.copy(data = newData, isLoading = false)
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _uiState.update {
+                    it.copy(error = e, isLoading = false)
                 }
             }
         }
+    }
 
-    fun safelyLaunch(block: suspend CoroutineScope.() -> Unit) =
-        viewModelScope.launch(viewModelCoroutineExceptionHandler) {
-            block()
-        }
+    protected fun updateData(reducer: (DATA) -> DATA) {
+        _uiState.update { it.copy(data = reducer(it.data)) }
+    }
 
     open fun clearError() {
         _uiState.update {
             it.copy(error = null)
         }
     }
-
 }
