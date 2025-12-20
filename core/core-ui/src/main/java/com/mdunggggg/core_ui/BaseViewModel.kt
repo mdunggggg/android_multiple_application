@@ -2,7 +2,8 @@ package com.mdunggggg.core_ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mdunggggg.core_util.NetworkObserver
+import com.mdunggggg.core_util.network.NetworkManager
+import com.mdunggggg.core_util.network.NetworkObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,6 +18,10 @@ abstract class BaseViewModel<DATA>(initData: DATA) : ViewModel(), NetworkObserve
 
     private val _connectivity = MutableStateFlow(true)
     val connectivity = _connectivity.asStateFlow()
+
+    init {
+        NetworkManager.addObserver(this)
+    }
 
     override fun onConnectivityChange(isOnline: Boolean) {
         _connectivity.value = isOnline
@@ -53,5 +58,10 @@ abstract class BaseViewModel<DATA>(initData: DATA) : ViewModel(), NetworkObserve
         _uiState.update {
             it.copy(error = null)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        NetworkManager.removeObserver(this)
     }
 }

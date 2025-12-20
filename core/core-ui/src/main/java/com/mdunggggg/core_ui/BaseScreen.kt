@@ -32,9 +32,6 @@ fun <T> BaseScreen(
         if (!networkConnectivity) {
             snackbarHostState.showSnackbar("No Internet Connection")
         }
-        else {
-            snackbarHostState.currentSnackbarData?.dismiss()
-        }
     }
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
         Box(modifier = Modifier.fillMaxSize().padding(it)) {
