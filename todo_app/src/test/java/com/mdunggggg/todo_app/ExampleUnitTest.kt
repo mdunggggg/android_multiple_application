@@ -1,4 +1,4 @@
-package com.mdunggggg.core_service
+package com.mdunggggg.todo_app
 
 import org.junit.Test
 
