@@ -18,4 +18,18 @@ object JamendoTypography {
         lineHeight = 32.sp,
         letterSpacing = 0.sp
     )
+
+    val regularTextStyle = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal,
+        lineHeight = 20.sp,
+        letterSpacing = 0.sp
+    )
+
+    val semiboldTextStyle = TextStyle(
+        fontSize = 12.sp,
+        fontWeight = FontWeight.SemiBold,
+        lineHeight = 16.sp,
+        letterSpacing = 0.sp
+    )
 }

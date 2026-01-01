@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.mdunggggg.jamendo_music.screen.home.component.HeaderItem
+import com.mdunggggg.jamendo_music.screen.home.component.TrendingSection
+import com.mdunggggg.jamendo_music.screen.home.data.trendingDataDummys
 
 @Composable
 fun HomeScreen(
@@ -20,6 +22,7 @@ fun HomeScreen(
     Box(modifier = modifier) {
         Column {
             HeaderItem(title = "I'm Dungggg", countNotification = 4)
+            TrendingSection(trendingList = trendingDataDummys)
         }
     }
 }
