@@ -42,3 +42,4 @@ project(":core:core-network").projectDir = File(rootProject.projectDir, "./core/
 project(":core:core-service").projectDir = File(rootProject.projectDir, "./core/core-service")
 project(":core:core-util").projectDir = File(rootProject.projectDir, "./core/core-util")
 project(":core:core-ui").projectDir = File(rootProject.projectDir, "./core/core-ui")
+include(":apps:jamendo_music")
