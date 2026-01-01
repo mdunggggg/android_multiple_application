@@ -1,23 +1,25 @@
-package com.mindy.jamendo_core_data.data_source
+package com.mindy.jamendo_core_data.repository
 
+import android.util.Log
 import com.mdunggggg.core_util.Result
 import com.mdunggggg.core_util.getResult
 import com.mindy.jamendo_core_data.model.Radio
 import com.mindy.jamendo_core_data.remote.JamendoApi
 import javax.inject.Inject
 
-class JamendoDataRemote @Inject internal constructor(
-    private val api : JamendoApi
-) : JamendoDataSource {
+class JamendoRepositoryImpl @Inject internal constructor(
+    private val remote : JamendoApi,
+) : JamendoRepository {
     override suspend fun fetchRadios(
         limit: Int,
         offset: Int,
         order: String
     ): Result<List<Radio>, Throwable> = getResult {
-        api.getRadios(
+        val response = remote.getRadios(
             limit = limit,
             offset = offset,
-            order = order,
-        ).results.orEmpty()
+            order = order
+        )
+        response.results ?: emptyList()
     }
 }

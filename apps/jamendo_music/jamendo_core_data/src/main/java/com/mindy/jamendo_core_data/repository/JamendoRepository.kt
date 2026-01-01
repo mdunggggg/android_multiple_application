@@ -1,11 +1,9 @@
-package com.mindy.jamendo_core_data.data_source
+package com.mindy.jamendo_core_data.repository
 
 import com.mdunggggg.core_util.Result
 import com.mindy.jamendo_core_data.model.Radio
-import com.mindy.jamendo_core_data.remote.JamendoApi
-import javax.inject.Inject
 
-interface JamendoDataSource {
+interface JamendoRepository {
     suspend fun fetchRadios(
         limit : Int = 10,
         offset : Int = 0,

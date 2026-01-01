@@ -20,11 +20,14 @@ internal interface JamendoApi {
 
     companion object {
         fun build(url: String): JamendoApi {
-            return buildServiceApi(url, JamendoApi::class.java, clientBuilder = {
-                logging {
-                    level = LoggingLevel.BASIC
-                }
-            })
+            return buildServiceApi(
+                url,
+                JamendoApi::class.java,
+                clientBuilder = {
+                    logging {
+                        level = LoggingLevel.BODY
+                    }
+                })
         }
     }
 }
