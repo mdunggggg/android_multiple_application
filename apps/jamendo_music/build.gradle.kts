@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 android {
@@ -60,4 +61,14 @@ dependencies {
     // Coil for Image Loading
     implementation(libs.coil.compose)
     implementation(libs.coil3.coil.network.okhttp)
+
+    // Core module
+    implementation(project(":core:core-ui"))
+
+    // Navigation
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.material3.adaptive.navigation3)
+    implementation(libs.kotlinx.serialization.core)
 }
