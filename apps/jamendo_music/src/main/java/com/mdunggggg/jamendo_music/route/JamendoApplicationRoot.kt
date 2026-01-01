@@ -1,20 +1,23 @@
 package com.mdunggggg.jamendo_music.route
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.mdunggggg.jamendo_music.screen.home.HomeScreen
 
 @Composable
 fun JamendoApplicationRoot(modifier: Modifier = Modifier) {
@@ -33,13 +36,13 @@ fun JamendoApplicationRoot(modifier: Modifier = Modifier) {
         }
     ) { innerPadding ->
         NavDisplay(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             entries = navigationState.toEntries(
                 entryProvider {
                     entry<JamendoRoute.Home> {
-                        Box {
-                            Text("Home Screen")
-                        }
+                        HomeScreen()
                     }
                     entry<JamendoRoute.Search> {
                         Box {
@@ -70,11 +73,18 @@ fun JamendoAppBar(
     selectedRoute: NavKey,
     onSelectRoute: (NavKey) -> Unit,
 ) {
-    BottomAppBar(modifier = modifier) {
+    val defaultColor = Color(0xFF020408)
+    BottomAppBar(
+        modifier = modifier,
+        containerColor = defaultColor,
+    ) {
         JAMENDO_TOP_LEVEL_DESTINATIONS.forEach { (topLevelDestination, bottomNavItem) ->
             NavigationBarItem(
                 selected = topLevelDestination == selectedRoute,
                 onClick = { onSelectRoute(topLevelDestination) },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = defaultColor
+                ),
                 icon = {
                     Icon(
                         imageVector = bottomNavItem.icon,
