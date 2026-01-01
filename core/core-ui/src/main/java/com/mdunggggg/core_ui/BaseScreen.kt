@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
@@ -36,36 +37,32 @@ fun <T> BaseScreen(
             snackbarHostState.showSnackbar("No Internet Connection")
         }
     }
-    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
-        Box(modifier = Modifier.fillMaxSize().padding(it)) {
-            content(state.value.data)
-            if (state.value.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-            state.value.error?.let { error ->
-                AlertDialog(
-                    onDismissRequest = {
-                        viewModel.clearError()
-                    },
-                    title = {
-                        Text(text = "Error")
-                    },
-                    text = {
-                        Text(text = error.localizedMessage ?: "Unknown Error")
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                viewModel.clearError()
-                            }
-                        ) {
-                            Text("OK")
-                        }
+    Box(modifier = Modifier.fillMaxSize()) {
+        content(state.value.data)
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
+        )
+
+        if (state.value.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+        state.value.error?.let { error ->
+            AlertDialog(
+                onDismissRequest = { viewModel.clearError() },
+                title = { Text(text = "Error") },
+                text = { Text(text = error.localizedMessage ?: "Unknown Error") },
+                confirmButton = {
+                    TextButton(onClick = { viewModel.clearError() }) {
+                        Text("OK")
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
