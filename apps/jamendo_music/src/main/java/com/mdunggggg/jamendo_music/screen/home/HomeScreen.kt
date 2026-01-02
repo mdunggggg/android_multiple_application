@@ -2,6 +2,7 @@ package com.mdunggggg.jamendo_music.screen.home
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +33,8 @@ import com.mdunggggg.jamendo_music.ui.theme.JamendoTypography
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    onDetailAlbumClick : (String) -> Unit = {}
 ) {
     BaseScreen(
         viewModel = viewModel
@@ -74,7 +76,11 @@ fun HomeScreen(
                     }
                     items(data.albums.size) { index ->
                         val album = data.albums[index]
-                        Box(modifier = Modifier.padding(horizontal = 8.dp)) {
+                        Box(modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .clickable {
+                                onDetailAlbumClick(album.id)
+                            }) {
                             AlbumItem(
                                 url = album.image,
                                 title = album.name,

@@ -36,4 +36,17 @@ class JamendoRepositoryImpl @Inject internal constructor(
         )
         response.results ?: emptyList()
     }
+
+    override suspend fun fetchAlbum(
+        id: String,
+    ): Result<Album, Throwable> {
+        return getResult {
+            val response = remote.getAlbumTracks(
+                limit = 1,
+                offset = 0,
+                id = id
+            )
+            response.results?.firstOrNull() ?: throw Throwable("Album not found")
+        }
+    }
 }

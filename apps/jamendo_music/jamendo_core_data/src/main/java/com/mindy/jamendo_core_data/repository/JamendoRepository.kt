@@ -16,4 +16,8 @@ interface JamendoRepository {
         offset : Int = 0,
         order : String = "releasedate_desc"
     ) : Result<List<Album>, Throwable>
+
+    suspend fun fetchAlbum(
+        id : String,
+    ) : Result<Album, Throwable>
 }

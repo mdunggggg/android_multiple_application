@@ -1,22 +1,22 @@
 package com.mdunggggg.jamendo_music.route
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.mdunggggg.jamendo_music.screen.detail_album.DetailAlbumScreen
 import com.mdunggggg.jamendo_music.screen.home.HomeScreen
 
 @Composable
@@ -26,13 +26,16 @@ fun JamendoApplicationRoot(modifier: Modifier = Modifier) {
         topLevelRoutes = JAMENDO_TOP_LEVEL_DESTINATIONS.keys.toList()
     )
     val navigator = JamendoNavigator(state = navigationState)
+    val isTopLevel = JAMENDO_TOP_LEVEL_DESTINATIONS.keys.contains(navigator.getCurrentRoute())
     Scaffold(
         bottomBar = {
-            JamendoAppBar(
-                modifier = modifier,
-                selectedRoute = navigationState.topLevelRoot,
-                onSelectRoute = { navKey -> navigator.navigate(navKey) }
-            )
+            if (isTopLevel) {
+                JamendoAppBar(
+                    modifier = modifier,
+                    selectedRoute = navigationState.topLevelRoot,
+                    onSelectRoute = { navKey -> navigator.navigate(navKey) }
+                )
+            }
         }
     ) { innerPadding ->
         NavDisplay(
@@ -42,7 +45,11 @@ fun JamendoApplicationRoot(modifier: Modifier = Modifier) {
             entries = navigationState.toEntries(
                 entryProvider {
                     entry<JamendoRoute.Home> {
-                        HomeScreen()
+                        HomeScreen(
+                            onDetailAlbumClick = { id ->
+                                navigator.navigate(JamendoRoute.DetailAlbum(id = id))
+                            }
+                        )
                     }
                     entry<JamendoRoute.Search> {
                         Box {
@@ -58,6 +65,9 @@ fun JamendoApplicationRoot(modifier: Modifier = Modifier) {
                         Box {
                             Text("Profile Screen")
                         }
+                    }
+                    entry<JamendoRoute.DetailAlbum> {
+                        DetailAlbumScreen(idAlbum = it.id)
                     }
                 }
             ),

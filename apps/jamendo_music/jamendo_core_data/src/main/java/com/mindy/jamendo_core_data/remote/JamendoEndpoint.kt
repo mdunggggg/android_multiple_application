@@ -6,4 +6,5 @@ object JamendoEndpoint {
     const val BASE_URL = "https://api.jamendo.com/v3.0/"
     const val RADIOS = "radios"
     const val ALBUMS = "albums"
+    const val TRACKS = "tracks"
 }

@@ -56,5 +56,9 @@ data class Album(
 
     @Expose
     @SerializedName("zip_allowed")
-    val zipAllowed: Boolean
+    val zipAllowed: Boolean,
+
+    @Expose
+    @SerializedName("tracks")
+    val tracks: List<Track> = emptyList()
 )

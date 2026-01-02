@@ -17,4 +17,9 @@ sealed interface JamendoRoute : NavKey {
 
     @Serializable
     data object Profile : JamendoRoute
+
+    @Serializable
+    data class DetailAlbum(
+        val id : String,
+    ) : JamendoRoute
 }

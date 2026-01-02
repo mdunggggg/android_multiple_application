@@ -26,6 +26,14 @@ internal interface JamendoApi {
         @Query("order") order: String = "releasedate_desc",
     ) : JamendoAlbumsResponse
 
+    @GET("${JamendoEndpoint.ALBUMS}/${JamendoEndpoint.TRACKS}")
+    suspend fun getAlbumTracks(
+        @Query("limit") limit: Int = 20,
+        @Query("offset") offset: Int = 0,
+        @Query("order") order: String = "releasedate_desc",
+        @Query("id") id: String,
+    ) : JamendoAlbumsResponse
+
     companion object {
         fun build(url: String): JamendoApi {
             return buildServiceApi(

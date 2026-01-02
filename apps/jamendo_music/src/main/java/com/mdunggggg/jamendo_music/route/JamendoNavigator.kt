@@ -13,6 +13,11 @@ class JamendoNavigator(val state : JamendoNavigationState) {
         }
     }
 
+    fun getCurrentRoute() : NavKey? {
+        val currentStack = state.backStacks[state.topLevelRoot] ?: return null
+        return currentStack.lastOrNull()
+    }
+
     fun goBack() {
         val currentStack = state.backStacks[state.topLevelRoot] ?: return
         val currentRoute = currentStack.last()
