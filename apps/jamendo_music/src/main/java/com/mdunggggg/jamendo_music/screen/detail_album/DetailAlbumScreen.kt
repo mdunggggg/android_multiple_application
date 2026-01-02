@@ -4,11 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mdunggggg.core_ui.BaseScreen
+import com.mindy.jamendo_core_data.model.Track
 
 @Composable
 fun DetailAlbumScreen(
     idAlbum : String,
-    viewModel : DetailAlbumViewModel = hiltViewModel()
+    viewModel : DetailAlbumViewModel = hiltViewModel(),
+    onTrackPlay : (Track) -> Unit,
 ) {
     LaunchedEffect(idAlbum) {
         viewModel.fetchAlbum(idAlbum)
@@ -20,6 +22,6 @@ fun DetailAlbumScreen(
         if (data.album == null) {
             return@BaseScreen
         }
-        DetailAlbumContent(album = data.album)
+        DetailAlbumContent(album = data.album, onTrackPlay = onTrackPlay)
     }
 }

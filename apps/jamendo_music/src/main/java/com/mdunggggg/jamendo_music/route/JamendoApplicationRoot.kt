@@ -1,6 +1,11 @@
 package com.mdunggggg.jamendo_music.route
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,29 +16,68 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.mdunggggg.jamendo_music.di.MusicControllerEntryPoint
+import com.mdunggggg.jamendo_music.player.controller.MusicControllerManagement
+import com.mdunggggg.jamendo_music.player.ui.MiniPlayer
 import com.mdunggggg.jamendo_music.screen.detail_album.DetailAlbumScreen
 import com.mdunggggg.jamendo_music.screen.home.HomeScreen
+import dagger.hilt.android.EntryPointAccessors
 
 @Composable
-fun JamendoApplicationRoot(modifier: Modifier = Modifier) {
+fun JamendoApplicationRoot(
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+
+    val musicControllerManager = remember {
+        EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            MusicControllerEntryPoint::class.java
+        ).musicControllerManagement()
+    }
     val navigationState = rememberJamendoNavigationState(
         startRoot = JamendoRoute.Home,
         topLevelRoutes = JAMENDO_TOP_LEVEL_DESTINATIONS.keys.toList()
     )
     val navigator = JamendoNavigator(state = navigationState)
     val isTopLevel = JAMENDO_TOP_LEVEL_DESTINATIONS.keys.contains(navigator.getCurrentRoute())
+
+    val musicState by musicControllerManager.musicState.collectAsStateWithLifecycle()
+    val showMiniPlayer = musicState.currentTrack != null
+
     Scaffold(
         bottomBar = {
+            AnimatedVisibility(
+                visible = showMiniPlayer,
+                enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+            ) {
+                MiniPlayer(
+                    musicState = musicState,
+                    onPlayPauseClick = {
+                        if (musicState.isPlaying) {
+                            musicControllerManager.pause()
+                        } else {
+                            musicControllerManager.resume()
+                        }
+                    },
+                    onMiniPlayerClick = {
+                    }
+                )
+            }
             if (isTopLevel) {
                 JamendoAppBar(
-                    modifier = modifier,
                     selectedRoute = navigationState.topLevelRoot,
-                    onSelectRoute = { navKey -> navigator.navigate(navKey) }
+                    onSelectRoute = { navigator.navigate(it) }
                 )
             }
         }
@@ -67,7 +111,12 @@ fun JamendoApplicationRoot(modifier: Modifier = Modifier) {
                         }
                     }
                     entry<JamendoRoute.DetailAlbum> {
-                        DetailAlbumScreen(idAlbum = it.id)
+                        DetailAlbumScreen(
+                            idAlbum = it.id,
+                            onTrackPlay = { track ->
+                                Log.e("JamendoAppBar", "DetailAlbumScreen: Play track ${track.name}" )
+                                musicControllerManager.play(track)
+                            })
                     }
                 }
             ),

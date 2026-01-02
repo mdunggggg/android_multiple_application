@@ -1,6 +1,7 @@
 package com.mdunggggg.jamendo_music.screen.detail_album
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,9 +33,14 @@ import com.mdunggggg.jamendo_music.screen.ext.toHeight
 import com.mdunggggg.jamendo_music.screen.ext.toWidth
 import com.mdunggggg.jamendo_music.ui.theme.JamendoTypography
 import com.mindy.jamendo_core_data.model.Album
+import com.mindy.jamendo_core_data.model.Track
 
 @Composable
-fun DetailAlbumContent(modifier: Modifier = Modifier, album : Album) {
+fun DetailAlbumContent(
+    modifier: Modifier = Modifier,
+    album: Album,
+    onTrackPlay: (Track) -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .background(
@@ -62,7 +68,9 @@ fun DetailAlbumContent(modifier: Modifier = Modifier, album : Album) {
         ) {
             item {
                 Box(
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
@@ -105,21 +113,27 @@ fun DetailAlbumContent(modifier: Modifier = Modifier, album : Album) {
 
             album.tracks.map {
                 item {
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(bottom = 12.dp)
-                    ) {
-                        Text(
-                            text = it.name,
-                            color = Color.White,
-                            style = JamendoTypography.regularTextStyle
-                        )
-                        4.toHeight()
-                        Text(
-                            text = "Duration: ${it.duration} seconds",
-                            color = Color(0xFF64748B),
-                            style = JamendoTypography.regularTextStyle.copy(fontSize = 12.sp)
-                        )
+                    Box(modifier = Modifier
+                        .clickable {
+                            onTrackPlay(it)
+                        }) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp)
+                        ) {
+                            Text(
+                                text = it.name,
+                                color = Color.White,
+                                style = JamendoTypography.regularTextStyle
+                            )
+                            4.toHeight()
+                            Text(
+                                text = "Duration: ${it.duration} seconds",
+                                color = Color(0xFF64748B),
+                                style = JamendoTypography.regularTextStyle.copy(fontSize = 12.sp)
+                            )
+                        }
                     }
                 }
             }

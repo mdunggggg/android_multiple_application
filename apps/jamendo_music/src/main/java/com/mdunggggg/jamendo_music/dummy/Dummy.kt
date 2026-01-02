@@ -1,5 +1,13 @@
 package com.mdunggggg.jamendo_music.dummy
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.mindy.jamendo_core_data.model.Album
 import com.mindy.jamendo_core_data.model.Track
 
@@ -59,6 +67,16 @@ object Dummy {
         shareurl = "https://www.jamendo.com/album/551122",
         zipAllowed = true,
         tracks = dummyTracks
+    )
+
+    @Composable
+    fun dummyAvatar() =  AsyncImage(
+        model = "https://scontent.fhan5-11.fna.fbcdn.net/v/t39.30808-1/470194678_2070287133410355_5243510936342359981_n.jpg?stp=dst-jpg_s480x480_tt6&_nc_cat=100&ccb=1-7&_nc_sid=1d2534&_nc_ohc=e9MA-bahipwQ7kNvwEsEgFi&_nc_oc=Adm0Tmr2ivfAXXCLfq1sRgWlJauh4WXyyNY8tWvBUYY5ZTR08OevBqfi0-EiNWLALcv70OtSHeG-c9EOq74HfUCY&_nc_zt=24&_nc_ht=scontent.fhan5-11.fna&_nc_gid=FdImc8h7Z2Xp-UtWRH8MWQ&oh=00_Afq1abmmpWg0pjjLyyjPaZe1UqBq6O6_diNerJs-5MSglA&oe=695C48E2",
+        contentDescription = null,
+        modifier = Modifier
+            .size(40.dp)
+            .clip(CircleShape),
+        contentScale = ContentScale.Crop
     )
 
 }
