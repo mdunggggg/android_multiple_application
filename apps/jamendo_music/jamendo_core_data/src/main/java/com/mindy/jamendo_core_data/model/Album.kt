@@ -27,7 +27,7 @@ data class Album(
 
     @Expose
     @SerializedName("releasedate")
-    val releasedate: LocalDate,
+    val releasedate: String,
 
     @Expose
     @SerializedName("artist_id")
