@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -56,10 +57,64 @@ fun JamendoApplicationRoot(
 
     Scaffold(
         bottomBar = {
+            if (isTopLevel) {
+                JamendoAppBar(
+                    selectedRoute = navigationState.topLevelRoot,
+                    onSelectRoute = { navigator.navigate(it) }
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            NavDisplay(
+                modifier = Modifier
+                    .fillMaxSize(),
+                entries = navigationState.toEntries(
+                    entryProvider {
+                        entry<JamendoRoute.Home> {
+                            HomeScreen(
+                                onDetailAlbumClick = { id ->
+                                    navigator.navigate(JamendoRoute.DetailAlbum(id = id))
+                                }
+                            )
+                        }
+                        entry<JamendoRoute.Search> {
+                            Box {
+                                Text("Search Screen")
+                            }
+                        }
+                        entry<JamendoRoute.Library> {
+                            Box {
+                                Text("Library Screen")
+                            }
+                        }
+                        entry<JamendoRoute.Profile> {
+                            Box {
+                                Text("Profile Screen")
+                            }
+                        }
+                        entry<JamendoRoute.DetailAlbum> {
+                            DetailAlbumScreen(
+                                idAlbum = it.id,
+                                onTrackPlay = { track ->
+                                    Log.e("JamendoAppBar", "DetailAlbumScreen: Play track ${track.name}" )
+                                    musicControllerManager.play(track)
+                                })
+                        }
+                    }
+                ),
+                onBack = navigator::goBack,
+            )
             AnimatedVisibility(
                 visible = showMiniPlayer,
                 enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
             ) {
                 MiniPlayer(
                     musicState = musicState,
@@ -74,54 +129,7 @@ fun JamendoApplicationRoot(
                     }
                 )
             }
-            if (isTopLevel) {
-                JamendoAppBar(
-                    selectedRoute = navigationState.topLevelRoot,
-                    onSelectRoute = { navigator.navigate(it) }
-                )
-            }
         }
-    ) { innerPadding ->
-        NavDisplay(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            entries = navigationState.toEntries(
-                entryProvider {
-                    entry<JamendoRoute.Home> {
-                        HomeScreen(
-                            onDetailAlbumClick = { id ->
-                                navigator.navigate(JamendoRoute.DetailAlbum(id = id))
-                            }
-                        )
-                    }
-                    entry<JamendoRoute.Search> {
-                        Box {
-                            Text("Search Screen")
-                        }
-                    }
-                    entry<JamendoRoute.Library> {
-                        Box {
-                            Text("Library Screen")
-                        }
-                    }
-                    entry<JamendoRoute.Profile> {
-                        Box {
-                            Text("Profile Screen")
-                        }
-                    }
-                    entry<JamendoRoute.DetailAlbum> {
-                        DetailAlbumScreen(
-                            idAlbum = it.id,
-                            onTrackPlay = { track ->
-                                Log.e("JamendoAppBar", "DetailAlbumScreen: Play track ${track.name}" )
-                                musicControllerManager.play(track)
-                            })
-                    }
-                }
-            ),
-            onBack = navigator::goBack,
-        )
     }
 }
 
