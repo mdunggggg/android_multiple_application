@@ -4,8 +4,10 @@ import com.mdungggg.core_network.LoggingBuilder
 import com.mdungggg.core_network.LoggingLevel
 import com.mdungggg.core_network.buildServiceApi
 import com.mindy.jamendo_core_data.BuildConfig
+import com.mindy.jamendo_core_data.data.JamendoAlbumsResponse
 import com.mindy.jamendo_core_data.data.JamendoRadiosResponse
 import com.mindy.jamendo_core_data.model.Radio
+import okhttp3.Interceptor
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,8 +17,14 @@ internal interface JamendoApi {
         @Query("limit") limit: Int = 20,
         @Query("offset") offset: Int = 0,
         @Query("order") order: String = "id_desc",
-        @Query("client_id") clientId: String = BuildConfig.JAMENDO_CLIENT_ID
     ): JamendoRadiosResponse
+
+    @GET(JamendoEndpoint.ALBUMS)
+    suspend fun getAlbums(
+        @Query("limit") limit: Int = 20,
+        @Query("offset") offset: Int = 0,
+        @Query("order") order: String = "releasedate_desc",
+    ) : JamendoAlbumsResponse
 
     companion object {
         fun build(url: String): JamendoApi {
@@ -26,6 +34,16 @@ internal interface JamendoApi {
                 clientBuilder = {
                     logging {
                         level = LoggingLevel.BODY
+                    }
+                    addInterceptor { chain ->
+                        val originalUrl = chain.request().url
+                        val newUrl = originalUrl.newBuilder()
+                            .addQueryParameter("client_id", BuildConfig.JAMENDO_CLIENT_ID)
+                            .build()
+                        val newRequest = chain.request().newBuilder()
+                            .url(newUrl)
+                            .build()
+                        chain.proceed(newRequest)
                     }
                 })
         }

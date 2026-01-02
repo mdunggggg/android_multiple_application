@@ -20,6 +20,10 @@ class ClientBuilder internal constructor(){
         loggingBuilder.apply(builder)
     }
 
+    fun addInterceptor(interceptor: Interceptor) {
+        interceptors = interceptors + interceptor
+    }
+
     fun build() : OkHttpClient = OkHttpClient.Builder()
         .addNetworkInterceptor(loggingBuilder.build())
         .readTimeout(readTimeoutInMillis, TimeUnit.MILLISECONDS)
