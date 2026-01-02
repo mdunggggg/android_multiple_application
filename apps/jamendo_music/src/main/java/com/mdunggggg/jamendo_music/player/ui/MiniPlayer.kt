@@ -1,5 +1,11 @@
 package com.mdunggggg.jamendo_music.player.ui
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,10 +29,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
@@ -48,6 +60,19 @@ fun MiniPlayer(
     modifier: Modifier = Modifier
 ) {
     val currentTrack = musicState.currentTrack ?: return
+    val infiniteTransition = rememberInfiniteTransition()
+    val rotationAnim by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 4000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    var rotationDegrees by remember { mutableFloatStateOf(0f) }
+    rotationDegrees = if (musicState.isPlaying) rotationAnim else rotationDegrees
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -76,7 +101,12 @@ fun MiniPlayer(
                     .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Dummy.dummyAvatar()
+                Dummy.dummyAvatar(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .rotate(rotationDegrees)
+                )
 
                 Spacer(modifier = Modifier.width(12.dp))
 

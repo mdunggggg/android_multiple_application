@@ -39,7 +39,7 @@ import com.mindy.jamendo_core_data.model.Track
 fun DetailAlbumContent(
     modifier: Modifier = Modifier,
     album: Album,
-    onTrackPlay: (Track) -> Unit = {}
+    onTrackPlay: (Int) -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -111,11 +111,11 @@ fun DetailAlbumContent(
                 }
             }
 
-            album.tracks.map {
+            album.tracks.mapIndexed { index, track ->
                 item {
                     Box(modifier = Modifier
                         .clickable {
-                            onTrackPlay(it)
+                            onTrackPlay(index)
                         }) {
                         Column(
                             modifier = Modifier
@@ -123,13 +123,13 @@ fun DetailAlbumContent(
                                 .padding(bottom = 12.dp)
                         ) {
                             Text(
-                                text = it.name,
+                                text = track.name,
                                 color = Color.White,
                                 style = JamendoTypography.regularTextStyle
                             )
                             4.toHeight()
                             Text(
-                                text = "Duration: ${it.duration} seconds",
+                                text = "Duration: ${track.duration} seconds",
                                 color = Color(0xFF64748B),
                                 style = JamendoTypography.regularTextStyle.copy(fontSize = 12.sp)
                             )

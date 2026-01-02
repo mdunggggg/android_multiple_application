@@ -2,6 +2,7 @@ package com.mdunggggg.jamendo_music.player.controller
 
 import android.content.ComponentName
 import android.content.Context
+import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -28,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class MusicControllerManagement @Inject constructor(
     @ApplicationContext private val context: Context
-){
+) {
     private var mediaController: MediaController? = null
 
     private val _musicState = MutableStateFlow(MusicState())
@@ -49,6 +50,7 @@ class MusicControllerManagement @Inject constructor(
         mediaController?.addListener(object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 _musicState.update { it.copy(isPlaying = isPlaying) }
+                Log.e("MusicController", "onIsPlayingChanged: $isPlaying")
                 if (isPlaying) {
                     job?.cancel()
                     job = getProgressUpdaterJob()
@@ -58,6 +60,7 @@ class MusicControllerManagement @Inject constructor(
             }
 
             override fun onPlaybackStateChanged(state: Int) {
+                Log.e("MusicController", "onPlaybackStateChanged: $state")
                 val playbackState = when (state) {
                     Player.STATE_IDLE -> PlaybackState.IDLE
                     Player.STATE_BUFFERING -> PlaybackState.BUFFERING
@@ -73,6 +76,20 @@ class MusicControllerManagement @Inject constructor(
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                Log.e("MusicController", "onMediaItemTransition: $mediaItem")
+                Log.e("MusicController", "onMediaItemTransition: reason $reason")
+                Log.e(
+                    "MusicController",
+                    "onMediaItemTransition: index ${mediaController?.currentMediaItemIndex}"
+                )
+                _musicState.update {
+                    it.copy(
+                        currentTrack = it.playlist.get(mediaController?.currentMediaItemIndex ?: 0),
+                        currentIndex = mediaController?.currentMediaItemIndex ?: 0,
+                        progress = 0,
+                        duration = mediaController?.duration ?: 0L
+                    )
+                }
             }
         })
     }
@@ -91,7 +108,7 @@ class MusicControllerManagement @Inject constructor(
     fun play(track: Track) {
         _musicState.update {
             MusicState(
-               currentTrack = track,
+                currentTrack = track,
                 playlist = listOf(track)
             )
         }
@@ -101,6 +118,13 @@ class MusicControllerManagement @Inject constructor(
     }
 
     fun setPlaylist(tracks: List<Track>, startIndex: Int = 0) {
+        _musicState.update {
+            MusicState(
+                currentTrack = tracks.getOrNull(startIndex),
+                playlist = tracks,
+                currentIndex = startIndex,
+            )
+        }
         val mediaItems = tracks.map {
             MediaItem.fromUri(it.audio)
         }
@@ -117,7 +141,10 @@ class MusicControllerManagement @Inject constructor(
 
     fun previous() = mediaController?.seekToPrevious()
 
-    fun seekTo(positionMs: Long) = mediaController?.seekTo(positionMs)
+    fun seekTo(positionMs: Long) {
+        mediaController?.seekTo(positionMs)
+        _musicState.update { it.copy(progress = positionMs) }
+    }
 
 
     fun disconnect() {

@@ -100,9 +100,11 @@ fun JamendoApplicationRoot(
                         entry<JamendoRoute.DetailAlbum> {
                             DetailAlbumScreen(
                                 idAlbum = it.id,
-                                onTrackPlay = { track ->
-                                    Log.e("JamendoAppBar", "DetailAlbumScreen: Play track ${track.name}" )
-                                    musicControllerManager.play(track)
+                                onTrackPlay = { tracks, index ->
+                                    musicControllerManager.setPlaylist(
+                                        tracks,
+                                        startIndex = index
+                                    )
                                 })
                         }
                     }

@@ -8,9 +8,9 @@ import com.mindy.jamendo_core_data.model.Track
 
 @Composable
 fun DetailAlbumScreen(
-    idAlbum : String,
-    viewModel : DetailAlbumViewModel = hiltViewModel(),
-    onTrackPlay : (Track) -> Unit,
+    idAlbum: String,
+    viewModel: DetailAlbumViewModel = hiltViewModel(),
+    onTrackPlay: (List<Track>, Int) -> Unit,
 ) {
     LaunchedEffect(idAlbum) {
         viewModel.fetchAlbum(idAlbum)
@@ -22,6 +22,8 @@ fun DetailAlbumScreen(
         if (data.album == null) {
             return@BaseScreen
         }
-        DetailAlbumContent(album = data.album, onTrackPlay = onTrackPlay)
+        DetailAlbumContent(album = data.album, onTrackPlay = { position ->
+            onTrackPlay(data.album.tracks, position)
+        })
     }
 }

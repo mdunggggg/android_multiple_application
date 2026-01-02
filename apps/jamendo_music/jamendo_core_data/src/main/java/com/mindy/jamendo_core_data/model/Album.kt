@@ -47,12 +47,12 @@ data class Album(
 
     @Expose
     @SerializedName("shorturl")
-    val shorturl: String,
+    val shorturl: String?,
 
 
     @Expose
     @SerializedName("shareurl")
-    val shareurl: String,
+    val shareurl: String?,
 
     @Expose
     @SerializedName("zip_allowed")
