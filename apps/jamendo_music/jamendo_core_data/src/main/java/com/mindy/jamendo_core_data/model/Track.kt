@@ -15,6 +15,8 @@ import kotlinx.serialization.Serializable
 //    "audiodownload": "https://prod-1.storage.jamendo.com/download/track/887202/mp32/",
 //    "audiodownload_allowed": true
 //}
+
+@Serializable
 data class Track(
     @Expose
     @SerializedName("id")

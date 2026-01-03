@@ -4,7 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     // KSP-HILT
     id("com.google.devtools.ksp")
 }
@@ -76,5 +76,7 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    implementation(libs.kotlinx.serialization.core)
 
 }

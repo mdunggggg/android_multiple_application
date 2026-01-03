@@ -29,4 +29,9 @@ class JamendoNavigator(val state : JamendoNavigationState) {
             currentStack.removeLastOrNull()
         }
     }
+
+    fun isPlayTrackRoute() : Boolean {
+        val currentRoute = getCurrentRoute() ?: return false
+        return currentRoute is JamendoRoute.PlayTrack
+    }
 }

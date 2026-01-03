@@ -1,7 +1,9 @@
 package com.mdunggggg.jamendo_music.player
 
 import com.mindy.jamendo_core_data.model.Track
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MusicState(
     val playbackState: PlaybackState = PlaybackState.IDLE,
     val currentTrack: Track? = null,

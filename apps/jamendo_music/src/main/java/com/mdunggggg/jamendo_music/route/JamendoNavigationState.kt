@@ -108,6 +108,10 @@ val configuration = SavedStateConfiguration {
                 JamendoRoute.DetailAlbum::class,
                 JamendoRoute.DetailAlbum.serializer()
             )
+            subclass(
+                JamendoRoute.PlayTrack::class,
+                JamendoRoute.PlayTrack.serializer()
+            )
         }
     }
 }

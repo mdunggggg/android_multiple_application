@@ -31,6 +31,7 @@ import com.mdunggggg.jamendo_music.player.controller.MusicControllerManagement
 import com.mdunggggg.jamendo_music.player.ui.MiniPlayer
 import com.mdunggggg.jamendo_music.screen.detail_album.DetailAlbumScreen
 import com.mdunggggg.jamendo_music.screen.home.HomeScreen
+import com.mdunggggg.jamendo_music.screen.play_track.PlayTrackScreen
 import dagger.hilt.android.EntryPointAccessors
 
 @Composable
@@ -53,7 +54,7 @@ fun JamendoApplicationRoot(
     val isTopLevel = JAMENDO_TOP_LEVEL_DESTINATIONS.keys.contains(navigator.getCurrentRoute())
 
     val musicState by musicControllerManager.musicState.collectAsStateWithLifecycle()
-    val showMiniPlayer = musicState.currentTrack != null
+    val showMiniPlayer = musicState.currentTrack != null && !navigator.isPlayTrackRoute()
 
     Scaffold(
         bottomBar = {
@@ -107,6 +108,43 @@ fun JamendoApplicationRoot(
                                     )
                                 })
                         }
+                        entry<JamendoRoute.PlayTrack> {
+                            PlayTrackScreen(
+                                musicState = musicState,
+                                onBackClick = {
+                                    navigator.goBack()
+                                },
+                                onMoreClick = {
+
+                                },
+                                onShuffleClick = {
+
+                                },
+                                onPreviousClick = {
+                                    musicControllerManager.previous()
+                                },
+                                onPlayPauseClick = {
+                                    if (musicState.isPlaying) {
+                                        musicControllerManager.pause()
+                                    } else {
+                                        musicControllerManager.resume()
+                                    }
+                                },
+                                onNextClick = {
+                                    musicControllerManager.next()
+                                },
+                                onRepeatClick = {
+                                },
+                                onSeek = {
+
+                                },
+                                onDevicesClick = {},
+                                onShareClick = {},
+                                onLikedClick = {},
+                                onSimilarTrackClick = {},
+                                onViewQueueClick = {}
+                            )
+                        }
                     }
                 ),
                 onBack = navigator::goBack,
@@ -128,6 +166,7 @@ fun JamendoApplicationRoot(
                         }
                     },
                     onMiniPlayerClick = {
+                        navigator.navigate(JamendoRoute.PlayTrack(musicState = musicState))
                     }
                 )
             }

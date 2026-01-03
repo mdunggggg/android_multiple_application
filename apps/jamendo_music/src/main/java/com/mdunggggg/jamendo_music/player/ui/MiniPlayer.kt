@@ -60,18 +60,7 @@ fun MiniPlayer(
     modifier: Modifier = Modifier
 ) {
     val currentTrack = musicState.currentTrack ?: return
-    val infiniteTransition = rememberInfiniteTransition()
-    val rotationAnim by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 4000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        )
-    )
-
-    var rotationDegrees by remember { mutableFloatStateOf(0f) }
-    rotationDegrees = if (musicState.isPlaying) rotationAnim else rotationDegrees
+    val rotationDegrees = musicState.progress * 360f / (musicState.duration.takeIf { it > 0 } ?: 1L)
 
     Surface(
         modifier = modifier
