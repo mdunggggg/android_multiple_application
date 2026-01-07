@@ -66,7 +66,13 @@ dependencies {
 
     implementation(project(":core:core-ui"))
     implementation(project(":core:core-util"))
-    implementation(project(":flutter"))
 
     implementation(libs.gson)
+
+    // Use the Flutter module as a prebuilt library
+    implementation("com.mdunggggg.flutter_module_wrapper:flutter_release:1.0")
+
+    // Use the Flutter module project directly
+//    implementation(project(":flutter"))
+
 }

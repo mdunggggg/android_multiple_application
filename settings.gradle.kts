@@ -16,6 +16,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
         maven {
             url = uri("https://storage.googleapis.com/download.flutter.io")
         }
@@ -59,6 +60,11 @@ project(":core:core-service").projectDir = File(rootProject.projectDir, "./core/
 project(":core:core-util").projectDir = File(rootProject.projectDir, "./core/core-util")
 project(":core:core-ui").projectDir = File(rootProject.projectDir, "./core/core-ui")
 
-apply {
-    from("flutter_settings.gradle")
-}
+
+// Include Flutter module wrapper (comment if flutter is embedded by aars)
+//val filePath: String = File(settingsDir, "flutter_module_wrapper/.android/include_flutter.groovy").absolutePath
+//if (File(filePath).exists()) {
+//    apply(from = filePath)
+//} else {
+//    throw GradleException("Không tìm thấy Flutter module tại: $filePath")
+//}
