@@ -66,4 +66,7 @@ dependencies {
 
     implementation(project(":core:core-ui"))
     implementation(project(":core:core-util"))
+    implementation(project(":flutter"))
+
+    implementation(libs.gson)
 }

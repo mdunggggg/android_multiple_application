@@ -2,15 +2,19 @@ package com.mdunggggg.todo_app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.mdunggggg.todo_app.flutter.FlutterFirstModuleBuilder
 import com.mdunggggg.todo_app.ui.theme.MultiApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,9 +36,17 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
+    val application = LocalContext.current.applicationContext as TodoApplication
+    val activity = LocalActivity.current
     Text(
         text = "Hello $name!",
-        modifier = modifier
+        modifier = modifier.clickable {
+            FlutterFirstModuleBuilder.getInstance(
+                application
+            ).launchFlutterModule(
+                activity!!
+            )
+        }
     )
 }
 
