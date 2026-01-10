@@ -70,9 +70,8 @@ dependencies {
     implementation(libs.gson)
 
     // Use the Flutter module as a prebuilt library
-    implementation(libs.flutter.release)
+//    implementation(libs.flutter.release)
 
     // Use the Flutter module project directly
-//    implementation(project(":flutter"))
-
+    implementation(project(":flutter"))
 }

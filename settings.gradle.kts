@@ -62,9 +62,9 @@ project(":core:core-ui").projectDir = File(rootProject.projectDir, "./core/core-
 
 
 // Include Flutter module wrapper (comment if flutter is embedded by aars)
-//val filePath: String = File(settingsDir, "flutter_module_wrapper/.android/include_flutter.groovy").absolutePath
-//if (File(filePath).exists()) {
-//    apply(from = filePath)
-//} else {
-//    throw GradleException("Không tìm thấy Flutter module tại: $filePath")
-//}
+val filePath: String = File(settingsDir, "flutter_module_wrapper/.android/include_flutter.groovy").absolutePath
+if (File(filePath).exists()) {
+    apply(from = filePath)
+} else {
+    throw GradleException("Không tìm thấy Flutter module tại: $filePath")
+}
